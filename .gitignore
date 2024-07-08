@@ -36,3 +36,13 @@
 out
 build
 /bin*/
+
+# python adn equator files
+__pycache__
+.bandit
+.coverage
+.coveragerc
+.flake8
+radon.cfg
+testcaserc.json
+lighthouserc.json

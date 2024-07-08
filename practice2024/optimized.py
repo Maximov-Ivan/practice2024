@@ -1,4 +1,4 @@
-import modules
+from .modules import load_json, get_properties, get_subsets, group_by_len, list_to_df, write_csv
 
 
 # алгоритм перебора с отсечениями
@@ -12,16 +12,19 @@ import modules
 # на вход принимает набор сущностей
 # возвращает минимальный по составу набор признаков, позволяющий
 # однозначно идентифицировать сущность в наборе
-def optimized_brute(objects):
+def optimized(json_string):
+
+    # чтение формата json
+    objects = load_json(json_string)
 
     # получение списка возможных признаков сущностей
-    properties, m = modules.get_properties(objects)
+    properties, m = get_properties(objects)
 
     # получение списка всех комбинаций признаков
-    subsets = modules.get_subsets(properties)
+    subsets = get_subsets(properties)
 
     # группировака списка комбинаций признаков по длине
-    grouped_subsets = modules.group_by_len(subsets, m)
+    grouped_subsets = group_by_len(subsets, m)
 
     # перебор комбинаций в порядке уменьшения длины
     # и выбор оптимальной (с наименьшим числом признаков)
@@ -68,5 +71,9 @@ def optimized_brute(objects):
             break
 
     # перевод комбинации признаков в DataFrame
-    df = modules.list_to_df(optimal_subset)
-    return df
+    df = list_to_df(optimal_subset)
+
+    # запись таблицы в csv-строку
+    csv_string = write_csv(df)
+
+    return csv_string

@@ -1,4 +1,4 @@
-import modules
+from .modules import load_json, get_properties, get_subsets, list_to_df, write_csv
 
 
 # алгоритм полного перебора
@@ -10,13 +10,16 @@ import modules
 # на вход принимает набор сущностей
 # возвращает минимальный по составу набор признаков, позволяющий
 # однозначно идентифицировать сущность в наборе
-def brute(objects):
+def brute(json_string):
+
+    # чтение формата json
+    objects = load_json(json_string)
 
     # получение списка возможных признаков сущностей
-    properties, m = modules.get_properties(objects)
+    properties, m = get_properties(objects)
 
     # получение списка всех комбинаций признаков
-    subsets = modules.get_subsets(properties)
+    subsets = get_subsets(properties)
 
     # перебор всех комбинаций и выбор оптимальной
     # (с наименьшим числом признаков)
@@ -33,15 +36,7 @@ def brute(objects):
 
                 # проверка того, что очередная комбинация признаков
                 # различает данную пару сущностей
-                is_different = False
-                for property in subset:
-                    if not (property in first_obj) \
-                         and not (property in second_obj):
-                        pass
-                    elif not (property in first_obj) \
-                        or not (property in second_obj) \
-                            or first_obj[property] != second_obj[property]:
-                        is_different = True
+                is_different = check_subset(subset, first_obj, second_obj)
 
                 # если комбинация не подходит, переход к следующей
                 if not (is_different):
@@ -56,5 +51,24 @@ def brute(objects):
             optimal_subset = subset
 
     # перевод комбинации признаков в DataFrame
-    df = modules.list_to_df(optimal_subset)
-    return df
+    df = list_to_df(optimal_subset)
+
+    # запись таблицы в csv-строку
+    csv_string = write_csv(df)
+
+    return csv_string
+
+
+# проверка того, что очередная комбинация признаков
+# различает данную пару сущностей
+def check_subset(subset, first_obj, second_obj):
+    is_different = False
+    for property in subset:
+        if not (property in first_obj) \
+           and not (property in second_obj):
+            pass
+        if not (property in first_obj) \
+           or not (property in second_obj) \
+           or first_obj[property] != second_obj[property]:
+            is_different = True
+    return is_different

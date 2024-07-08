@@ -3,11 +3,11 @@ import pandas as pd
 
 
 # функция для чтения формата json
-# на вход принимает файл json
+# на вход принимает json-строку
 # возвращает объект Python (обычно список или словарь,
-# в зависимости от структуры входного файла)
-def load_json(filename):
-    objects = json.load(open(filename, 'r', encoding='utf-8'))
+# в зависимости от структуры входной строки)
+def load_json(json_string):
+    objects = json.loads(json_string)
     return objects
 
 
@@ -19,7 +19,7 @@ def get_properties(objects):
     for object in objects:
         for property in object.keys():
             properties.add(property)
-    properties = list(properties)
+    properties = sorted(list(properties))
     m = len(properties)
     return properties, m
 
@@ -50,14 +50,14 @@ def group_by_len(subsets, m):
 # функция для перевода списка в DataFrame
 # на вход принимает список
 # возвращает объект DataFrame
-def list_to_df(list):
-    df = pd.DataFrame(list)
+def list_to_df(lst):
+    df = pd.DataFrame(lst)
     return df
 
 
-# функция для записи таблицы в файл формата csv
-# на вход принимает таблицу (DataFrame) и имя файла
-# возвращает файл формата csv
-def write_scv(df, filename='output.csv'):
-    df.to_csv(filename, header=False, index=False, encoding='utf-8')
-    return open(filename, mode='r')
+# функция для записи таблицы в csv-строку
+# на вход принимает таблицу (DataFrame)
+# возвращает csv-строку
+def write_csv(df):
+    csv_string = df.to_csv(header=False, index=False, encoding='utf-8')
+    return csv_string
