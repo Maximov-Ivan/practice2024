@@ -36,7 +36,7 @@ def optimized(json_string):
         for subset in grouped_subsets[subset_len]:
 
             # создание множества для хранения
-            # и поиска значений призкаковсущностей
+            # и поиска значений признаков сущностей
             set_objects = set()
             is_correct_subset = True
             for i in range(n):
