@@ -17,7 +17,7 @@ def optimized(json_string):
     # чтение формата json
     objects = load_json(json_string)
 
-    # получение списка возможных признаков сущностей
+    # получение списка возможных признаков сущностей и их число
     properties, m = get_properties(objects)
 
     # получение списка всех комбинаций признаков
